@@ -161,3 +161,70 @@ ON a.customer_id = b.customer_id
 GROUP BY a.customer_name
 ORDER BY SUM(b.amount) DESC
 LIMIT 1;
+
+
+
+-- ==========================================================
+-- Question 12
+-- Display employee name, project name, and project start date
+-- for every employee assigned to a project.
+-- ==========================================================
+
+SELECT a.employee_name,
+       c.project_name,
+       c.start_date
+FROM employees a
+INNER JOIN employee_projects b
+ON a.employee_id = b.employee_id
+INNER JOIN projects c
+ON b.project_id = c.project_id;
+
+
+
+-- ==========================================================
+-- Question 13
+-- Display the average salary of employees in each department.
+-- ==========================================================
+
+SELECT b.department_name,
+       AVG(a.salary) AS average_salary
+FROM employees a
+INNER JOIN departments b
+ON a.department_id = b.department_id
+GROUP BY b.department_name;
+
+
+
+-- ==========================================================
+-- Question 14
+-- Display the customer name and the number of different
+-- products purchased by each customer.
+-- ==========================================================
+
+SELECT a.customer_name,
+       COUNT(DISTINCT c.product_id) AS total_products_purchased
+FROM customers a
+INNER JOIN orders b
+ON a.customer_id = b.customer_id
+INNER JOIN order_items c
+ON b.order_id = c.order_id
+GROUP BY a.customer_name;
+
+
+
+-- ==========================================================
+-- Question 15
+-- Display every customer along with total orders placed
+-- and total amount spent.
+-- Customers with no orders should also be displayed.
+-- ==========================================================
+
+SELECT a.customer_name,
+       COUNT(DISTINCT b.order_id) AS total_orders,
+       COALESCE(SUM(c.quantity * c.price), 0) AS total_amount_spent
+FROM customers a
+LEFT JOIN orders b
+ON a.customer_id = b.customer_id
+LEFT JOIN order_items c
+ON b.order_id = c.order_id
+GROUP BY a.customer_name;
